@@ -20,8 +20,6 @@ public class Main {
                .setTitle("Ion")
                .setAuthor("Liviu Rebreanu")
                .setPublishedDate(LocalDate.of(1910, 10, 20))
-               .setPrice(4)
-               .setStock(20)
                .build();
        //System.out.println(book);
 
@@ -42,14 +40,10 @@ public class Main {
         Book bookMoaraCuNoroc = new BookBuilder().setAuthor("Ioan Slavici")
                 .setTitle("Moara cu noroc")
                 .setPublishedDate(LocalDate.of(1950,2,7))
-                .setPrice(20)
-                .setStock(4)
                 .build();
-       System.out.println(bookMoaraCuNoroc.getPrice());
+
        bookService.save(bookMoaraCuNoroc);
        System.out.println(bookService.findAll());
-       bookService.saveSaleBook(bookMoaraCuNoroc);
-       System.out.println("cartile vandute sunt" + bookService.findAllSalesBooks());
        //bookService.delete(bookMoaraCuNoroc);
       // bookService.delete(book);
        System.out.println(bookService.findAll());

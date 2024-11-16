@@ -10,6 +10,5 @@ public interface BookService {
     boolean save(Book book);
     boolean delete(Book book);
     int getAgeOfBook(Long id);
-    boolean saveSaleBook(Book book);
-    List<Book> findAllSalesBooks();
+
 }

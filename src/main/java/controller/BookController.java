@@ -17,83 +17,50 @@ public class BookController {
 
         this.bookView.addSaveButtonListener(new SaveButtonListener());
         this.bookView.addDeleteButtonListener(new DeleteButtonListener());
-        this.bookView.addSaleButtonListener(new SaleButtonListener());
+
     }
 
     private class SaveButtonListener implements EventHandler<ActionEvent>{
+
         @Override
-        public void handle(ActionEvent event){
+        public void handle(ActionEvent event) {
             String title = bookView.getTitle();
             String author = bookView.getAuthor();
-            Integer price = bookView.getPrice();
-            Integer stock = bookView.getStock();
 
-            if(title.isEmpty() || author.isEmpty()){
-                bookView.addDisplayAlertMesssage("Save Error","Problem at author or title fields","Can not have an empty title or author field");
-            } else{
-                BookDTO bookDTO = new BookDTOBuilder()
-                        .setTitle(title)
-                        .setAuthor(author)
-                        .setPrice(price)
-                        .setStock(stock)
-                        .build();
+            if (title.isEmpty() || author.isEmpty()){
+                bookView.addDisplayAlertMessage("Save Error", "Problem at Author or Title fields", "Can not have an empty Title or Author field.");
+            } else {
+                BookDTO bookDTO = new BookDTOBuilder().setTitle(title).setAuthor(author).build();
                 boolean savedBook = bookService.save(BookMapper.convertBookDTOToBook(bookDTO));
 
-                if(savedBook){
-                    bookView.addDisplayAlertMesssage("Save Successful","Book Added","Book was successfully added to database");
+                if (savedBook){
+                    bookView.addDisplayAlertMessage("Save Successful", "Book Added", "Book was successfully added to the database.");
                     bookView.addBookToObservableList(bookDTO);
-                }
-                else {
-                    bookView.addDisplayAlertMesssage("Save Error","Problem at adding Book","There was a problem at adding Book please try again");
+                } else {
+                    bookView.addDisplayAlertMessage("Save Error", "Problem at adding Book", "There was a problem at adding the book to the database. Please try again!");
                 }
             }
         }
     }
 
     private class DeleteButtonListener implements EventHandler<ActionEvent>{
+
         @Override
         public void handle(ActionEvent event) {
             BookDTO bookDTO = (BookDTO) bookView.getBookTableView().getSelectionModel().getSelectedItem();
-            if(bookDTO != null){
+            if (bookDTO != null){
                 boolean deletionSuccessful = bookService.delete(BookMapper.convertBookDTOToBook(bookDTO));
 
-                if(deletionSuccessful){
-                    bookView.addDisplayAlertMesssage("Delete Successful","Book deleted","Book was successfully deleted to database");
+                if (deletionSuccessful){
+                    bookView.addDisplayAlertMessage("Delete Successful", "Book Deleted", "Book was successfully deleted from the database.");
                     bookView.removeBookFromObservableList(bookDTO);
-                } else{
-                    bookView.addDisplayAlertMesssage("Delete Error","Problem at deleting Book","There was a problem at deleting Book please try again");
+                } else {
+                    bookView.addDisplayAlertMessage("Delete Error", "Problem at deleting book", "There was a problem with the database. Please try again!");
                 }
-            }
-            else{
-                bookView.addDisplayAlertMesssage("Delete Error","Problem at deleting","You must select a book before pressing the delete button");
+            } else {
+                bookView.addDisplayAlertMessage("Delete Error", "Problem at deleting book", "You must select a book before pressing the delete button.");
             }
         }
     }
-    private class SaleButtonListener implements EventHandler<ActionEvent> {
 
-        @Override
-        public void handle(ActionEvent event) {
-            BookDTO saleBook = (BookDTO) bookView.getBookTableView().getSelectionModel().getSelectedItem();
-            if (saleBook != null) {
-                if (saleBook.getStock() > 0) {
-                    saleBook.setStock(saleBook.getStock() - 1);
-                    bookView.getBookTableView().refresh();
-                    if (saleBook.getStock() == 0) {
-                        bookView.removeBookFromObservableList(saleBook);
-                    }
-                    bookView.addBookToObservableListSale(saleBook);
-                    boolean saleSaved = bookService.saveSaleBook(BookMapper.convertBookDTOToBook(saleBook));
-                    if (saleSaved) {
-                        bookView.addDisplayAlertMesssage("Sale Successful", "Book sold", "The book was sold successfully.");
-                    } else {
-                        bookView.addDisplayAlertMesssage("Sale Error", "Database Error", "There was a problem saving the sale to the database.");
-                    }
-                } else {
-                    bookView.addDisplayAlertMesssage("Sale Error", "Out of Stock", "The selected book is out of stock.");
-                }
-            } else {
-                bookView.addDisplayAlertMesssage("Sale Error", "No Selection", "You must select a book before pressing the sale button.");
-            }
-        }
-
-    }}
+}

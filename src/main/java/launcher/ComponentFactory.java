@@ -28,14 +28,12 @@ public class ComponentFactory {
         }
         return instance;
     }
-    public ComponentFactory(Boolean componentsForTest, Stage primaryStage)
-    {
+    public ComponentFactory(Boolean componentsForTest, Stage primaryStage){
         Connection connection = DatabaseConnectionFactory.getConnectionWrapper(componentsForTest).getConnection();
         this.bookRepository = new BookRepositoryMySQL(connection);
         this.bookService = new BookServiceImpl(bookRepository);
-        List<BookDTO> bookDTOS = BookMapper.convertBookListToBookDTOList(bookService.findAll());
-        List<BookDTO> soldBookDTOS = BookMapper.convertBookListToBookDTOListSales(bookService.findAllSalesBooks());
-        this.bookView = new BookView(primaryStage, bookDTOS, soldBookDTOS);
+        List<BookDTO> bookDTOs = BookMapper.convertBookListToBookDTOList(bookService.findAll());
+        this.bookView = new BookView(primaryStage, bookDTOs);
         this.bookController = new BookController(bookView, bookService);
     }
 

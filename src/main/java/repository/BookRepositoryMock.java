@@ -38,13 +38,5 @@ public class BookRepositoryMock implements BookRepository{
         books.clear();
     }
 
-    @Override
-    public boolean saveSale(Book book) {
-        return false;
-    }
 
-    @Override
-    public List<Book> findSalesBooks() {
-        return null;
-    }
 }

@@ -13,6 +13,5 @@ public interface BookRepository {
     boolean save(Book book);
     boolean delete(Book book);
     void removeAll();
-    boolean saveSale(Book book);
-    List<Book> findSalesBooks();
+
 }

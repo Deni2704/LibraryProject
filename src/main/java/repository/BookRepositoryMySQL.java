@@ -53,15 +53,12 @@
 
                                                                         @Override
                                                                         public boolean save(Book book) {
-                                                                            String newSql = "INSERT INTO book(id, author, title, publishedDate, price, stock) VALUES(NULL, ?, ?, ?, ?, ?) ";
+                                                                            String newSql = "INSERT INTO book(id, author, title, publishedDate) VALUES(NULL, ?, ?, ?) ";
                                                                             try{
                                                                                 PreparedStatement statement = connection.prepareStatement(newSql);
                                                                                 statement.setString(1, book.getAuthor());
                                                                                 statement.setString(2, book.getTitle());
                                                                                 statement.setDate(3, Date.valueOf((book.getPublishedDate())));
-                                                                                statement.setInt(4,book.getPrice());
-                                                                                statement.setInt(5,book.getStock());
-                                                                                System.out.println(statement);
                                                                                 statement.executeUpdate();
                                                                             } catch (SQLException e){
                                                                                 e.printStackTrace();
@@ -95,46 +92,6 @@
                                                                                 e.printStackTrace();
                                                                             }
                                                                         }
-                                                                        public boolean saveSale(Book book) {
-                                                                            String sql = "INSERT INTO sales (id,author,title,price) VALUES (NULL,?, ?, ?)";
-                                                                            try {
-                                                                                PreparedStatement statement = connection.prepareStatement(sql);
-                                                                                statement.setString(1,book.getAuthor());
-                                                                                statement.setString(2, book.getTitle());
-                                                                                statement.setInt(3,book.getPrice());
-                                                                                statement.executeUpdate();
-                                                                            } catch (SQLException e) {
-                                                                                e.printStackTrace();
-                                                                                return false;
-                                                                            }
-                                                                            return true;
-                                                                        }
-
-                                                                        @Override
-                                                                        public List<Book> findSalesBooks() {
-                                                                            String sql = "SELECT * FROM sales;";
-                                                                            List<Book> soldBooks = new ArrayList<>();
-
-                                                                            try {
-                                                                                Statement statement = connection.createStatement();
-                                                                                ResultSet resultSet = statement.executeQuery(sql);
-
-                                                                                while (resultSet.next()) {
-                                                                                    Book book = new BookBuilder()
-                                                                                            .setTitle(resultSet.getString("title"))
-                                                                                            .setAuthor(resultSet.getString("author"))
-                                                                                            .setPrice(resultSet.getInt("price"))
-                                                                                            .build();
-                                                                                    soldBooks.add(book);
-                                                                                }
-                                                                            } catch (SQLException e) {
-                                                                                e.printStackTrace();
-                                                                            }
-
-                                                                            return soldBooks;
-                                                                        }
-
-
 
 
                                                                         private Book getBookFromResultSet(ResultSet resultSet) throws SQLException{
@@ -143,8 +100,6 @@
                                                                                     .setTitle(resultSet.getString("title"))
                                                                                     .setAuthor(resultSet.getString("author"))
                                                                                     .setPublishedDate(new java.sql.Date(resultSet.getDate("publishedDate").getTime()).toLocalDate())
-                                                                                    .setPrice(resultSet.getInt("price"))
-                                                                                    .setStock(resultSet.getInt("stock"))
                                                                                     .build();
                                                                         }
                                                                     }
