@@ -3,12 +3,10 @@ import model.Book;
 import model.builder.BookBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import repository.BookRepository;
-import repository.BookRepositoryMock;
-import repository.BookRepositoryMySQL;
+import repository.book.BookRepository;
+import repository.book.BookRepositoryMySQL;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
@@ -43,8 +41,6 @@ public class BookRepositoryMySQLTest {
                 .setTitle("Harry Potter")
                 .setAuthor("J K Rowling")
                 .setPublishedDate(LocalDate.of(2008,10,2))
-                .setPrice(40)
-                .setStock(5)
                 .build()));
     }
 }

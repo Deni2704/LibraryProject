@@ -1,10 +1,9 @@
-                                                                    package repository;
+                                                                    package repository.book;
 
                                                                     import model.Book;
                                                                     import model.builder.BookBuilder;
 
                                                                     import java.sql.*;
-                                                                    import java.time.LocalDate;
                                                                     import java.util.ArrayList;
                                                                     import java.util.List;
                                                                     import java.util.Optional;
