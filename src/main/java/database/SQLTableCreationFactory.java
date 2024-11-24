@@ -1,6 +1,7 @@
 package database;
 
 import static database.Constants.Tables.BOOK;
+import static database.Constants.Tables.SALE;
 import static database.Constants.Tables.RIGHT;
 import static database.Constants.Tables.ROLE;
 import static database.Constants.Tables.ROLE_RIGHT;
@@ -18,6 +19,13 @@ public class SQLTableCreationFactory {
                     "  publishedDate datetime DEFAULT NULL," +
                     "  PRIMARY KEY (id)," +
                     "  UNIQUE KEY id_UNIQUE (id)" +
+                    ") ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;";
+            case SALE ->"CREATE TABLE IF NOT EXISTS sales(" +
+                    " id bigInt NOT NULL AUTO_INCREMENT," +
+                    " title VARCHAR(500) NOT NULL," +
+                    " author VARCHAR(500) NOT NULL," +
+                    " price INT NOT NULL," +
+                    " PRIMARY KEY(id)" +
                     ") ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;";
             case USER -> "CREATE TABLE IF NOT EXISTS user (" +
                     "  id INT NOT NULL AUTO_INCREMENT," +
