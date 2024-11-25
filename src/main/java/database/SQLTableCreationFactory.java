@@ -25,6 +25,7 @@ public class SQLTableCreationFactory {
                     " title VARCHAR(500) NOT NULL," +
                     " author VARCHAR(500) NOT NULL," +
                     " price INT NOT NULL," +
+                    "stock INT NOT NULL,"+
                     " PRIMARY KEY(id)" +
                     ") ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;";
             case USER -> "CREATE TABLE IF NOT EXISTS user (" +
@@ -64,7 +65,7 @@ public class SQLTableCreationFactory {
                     "    REFERENCES `right` (id)" +
                     "    ON DELETE CASCADE" +
                     "    ON UPDATE CASCADE);";
-            case USER_ROLE -> "\tCREATE TABLE IF NOT EXISTS user_role (" +
+            case USER_ROLE -> "CREATE TABLE IF NOT EXISTS user_role (" +
                     "  id INT NOT NULL AUTO_INCREMENT," +
                     "  user_id INT NOT NULL," +
                     "  role_id INT NOT NULL," +

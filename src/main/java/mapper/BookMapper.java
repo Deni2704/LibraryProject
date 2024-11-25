@@ -29,6 +29,11 @@ public class BookMapper {
                 .build();
     }
     public static BookDTO convertBookToBookDTOSales(Book book){
+        /*return new BookDTOBuilder().setTitle(book.getTitle())
+                .setAuthor(book.getAuthor())
+                .setPrice(book.getPrice())
+                .setStock(book.getStock())
+                .build();*/
         return new BookDTOBuilder().setTitle(book.getTitle())
                 .setAuthor(book.getAuthor())
                 .setPrice(book.getPrice())

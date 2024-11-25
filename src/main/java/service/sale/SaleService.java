@@ -10,4 +10,5 @@ public interface SaleService {
     boolean updateStock(Book book);
 
 
+
 }

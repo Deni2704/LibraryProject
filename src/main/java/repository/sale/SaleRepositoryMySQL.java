@@ -27,6 +27,7 @@ public class SaleRepositoryMySQL implements SaleRepository{
                         .setTitle(resultSet.getString("title"))
                         .setAuthor(resultSet.getString("author"))
                         .setPrice(resultSet.getInt("price"))
+                        .setStock(resultSet.getInt("stock"))
                         .build();
                 soldBooks.add(book);
             }
@@ -39,26 +40,68 @@ public class SaleRepositoryMySQL implements SaleRepository{
 
     @Override
     public boolean saveSale(Book book) {
-        String sql = "INSERT INTO sales (id,author,title,price) VALUES (NULL,?, ?, ?)";
-        try {
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1,book.getAuthor());
+        Integer currentStock = getBookStockInSales(book);
+        if (currentStock != null) {
+            return updateBookStockInSales(book, currentStock);
+        } else {
+            return insertNewBookInSales(book);
+        }
+    }
+
+    @Override
+    public Integer getBookStockInSales(Book book) {
+        String checkBookSql = "SELECT stock FROM sales WHERE author = ? AND title = ?";
+        try (PreparedStatement statement = connection.prepareStatement(checkBookSql)) {
+            statement.setString(1, book.getAuthor());
             statement.setString(2, book.getTitle());
-            statement.setInt(3,book.getPrice());
-            statement.executeUpdate();
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt("stock");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
-        return true;
+        return null;
+    }
+
+
+    @Override
+    public boolean updateBookStockInSales(Book book, Integer currentStock) {
+        String updateStockSql = "UPDATE sales SET stock = stock + 1 WHERE author = ? AND title = ?";
+        try (PreparedStatement statement = connection.prepareStatement(updateStockSql)) {
+            statement.setString(1, book.getAuthor());
+            statement.setString(2, book.getTitle());
+            int rowsUpdated = statement.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean insertNewBookInSales(Book book) {
+        String insertBookSql = "INSERT INTO sales (id, author, title, price, stock) VALUES (NULL, ?, ?, ?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(insertBookSql)) {
+            statement.setString(1, book.getAuthor());
+            statement.setString(2, book.getTitle());
+            statement.setInt(3, book.getPrice());
+            statement.setInt(4, 1);
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
     public boolean updateStock(Book book) {
         if (book.getStock() == null || book.getStock() <= 0) {
-            return false; // Out of stock
+            return false;
         }
-        book.setStock(book.getStock() - 1); // Reduce stock by 1
+        book.setStock(book.getStock() - 1);
 
         String updateStockSql = "UPDATE book SET stock = ? WHERE author = ? AND title = ?";
         try (PreparedStatement statement = connection.prepareStatement(updateStockSql)) {
@@ -67,7 +110,7 @@ public class SaleRepositoryMySQL implements SaleRepository{
             statement.setString(3, book.getTitle());
             int rowsUpdated = statement.executeUpdate();
 
-            return rowsUpdated > 0; // True if stock was updated
+            return rowsUpdated > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

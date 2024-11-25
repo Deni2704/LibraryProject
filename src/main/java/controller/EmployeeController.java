@@ -96,16 +96,14 @@ public class EmployeeController {
             boolean stockUpdated = saleService.updateStock(saleBook);
             if (stockUpdated) {
                 if (saleBook.getStock() == 0) {
-                    // Stoc epuizat, ștergem cartea din baza de date și tabel
                     boolean deletionSuccessful = bookService.delete(saleBook);
                     if (deletionSuccessful) {
-                        employeeView.removeBookFromObservableList(saleBookDTO); // Eliminare din tabel
+                        employeeView.removeBookFromObservableList(saleBookDTO);
                     }
                 }
                 saleService.saveSale(saleBook); // Add sale to the database
                 saleBookDTO.setStock(saleBook.getStock()); // Update stock in DTO
-                employeeView.updateBookInTable(saleBookDTO); // Update stock in table
-                employeeView.addBookToObservableListSale(saleBookDTO); // Add to sales table
+                employeeView.addBookToObservableListSale(saleBookDTO);
                 employeeView.addDisplayAlertMesssage("Sale Successful", "Book Sold", "The book was sold successfully.");
             } else {
                 employeeView.addDisplayAlertMesssage("Sale Error", "Update Failed", "Failed to update the stock.");

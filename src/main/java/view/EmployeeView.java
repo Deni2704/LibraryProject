@@ -96,8 +96,10 @@ public class EmployeeView{
         TableColumn<BookDTO, Integer> salePriceColumn = new TableColumn<>("Price");
         salePriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
 
+       /* TableColumn<BookDTO, Integer> stockPriceColumn = new TableColumn<>("Stock");
+        stockPriceColumn.setCellValueFactory(new PropertyValueFactory<>("stock"));
 
-
+        saleTableView.getColumns().addAll(saleTitleColumn, saleAuthorColumn, salePriceColumn,stockPriceColumn);*/
         saleTableView.getColumns().addAll(saleTitleColumn, saleAuthorColumn, salePriceColumn);
         saleTableView.setItems(booksObservableListSale);
 
@@ -172,21 +174,22 @@ public class EmployeeView{
     public void addBookToObservableList(BookDTO bookDTO){
         this.booksObservableList.add(bookDTO);
     }
-    public void addBookToObservableListSale(BookDTO bookDTO) { this.booksObservableListSale.add(bookDTO);}
+    public void addBookToObservableListSale(BookDTO bookDTO)
+    { boolean exists = booksObservableListSale.stream()
+                    .anyMatch(book -> book.getTitle()
+                    .equals(bookDTO.getTitle())
+                    && book.getAuthor()
+                    .equals(bookDTO.getAuthor()));
+
+        if (!exists) {
+            this.booksObservableListSale.add(bookDTO);
+        }
+
+    }
     public void removeBookFromObservableList(BookDTO bookDTO){
         this.booksObservableList.remove(bookDTO);
     }
-    public void updateBookInTable(BookDTO updatedBook) {
-        ObservableList<BookDTO> books = bookTableView.getItems();
-        for (int i = 0; i < books.size(); i++) {
-            BookDTO book = books.get(i);
-            if (book.getTitle().equals(updatedBook.getTitle()) && book.getAuthor().equals(updatedBook.getAuthor())) {
-                books.set(i, updatedBook);
-                break;
-            }
-        }
-        bookTableView.refresh();
-    }
+
     public TableView getBookTableView(){
         return bookTableView;
     }
