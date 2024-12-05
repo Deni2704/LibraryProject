@@ -12,7 +12,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
-import model.Book;
+import model.User;
 import view.model.BookDTO;
 
 import java.util.List;
@@ -32,8 +32,11 @@ public class EmployeeView{
     private Button saveButton;
     private Button deleteButoon;
     private Button saleButton;
+    private User currentUser;
 
-    public EmployeeView(Stage primaryStage, List<BookDTO> books, List<BookDTO> soldBooks){
+    public EmployeeView(Stage primaryStage, List<BookDTO> books, List<BookDTO> soldBooks,User currentUser){
+        System.out.println("User received in EmployeeView: " + currentUser.toString());
+        this.currentUser = currentUser;
         primaryStage.setTitle("Library");
         GridPane gridPane = new GridPane();
         initializeGridPane(gridPane);
@@ -175,15 +178,8 @@ public class EmployeeView{
         this.booksObservableList.add(bookDTO);
     }
     public void addBookToObservableListSale(BookDTO bookDTO)
-    { boolean exists = booksObservableListSale.stream()
-                    .anyMatch(book -> book.getTitle()
-                    .equals(bookDTO.getTitle())
-                    && book.getAuthor()
-                    .equals(bookDTO.getAuthor()));
-
-        if (!exists) {
-            this.booksObservableListSale.add(bookDTO);
-        }
+    {
+        this.booksObservableListSale.add(bookDTO);
 
     }
     public void removeBookFromObservableList(BookDTO bookDTO){
@@ -193,4 +189,8 @@ public class EmployeeView{
     public TableView getBookTableView(){
         return bookTableView;
     }
+    public int getCurrentUserId(){
+        return Math.toIntExact((Long) currentUser.getId());
+    }
+
 }

@@ -39,13 +39,10 @@ public class SaleRepositoryMySQL implements SaleRepository{
     }
 
     @Override
-    public boolean saveSale(Book book) {
-        Integer currentStock = getBookStockInSales(book);
-        if (currentStock != null) {
-            return updateBookStockInSales(book, currentStock);
-        } else {
-            return insertNewBookInSales(book);
-        }
+    public boolean saveSale(Book book,int user_id) {
+
+            return insertNewBookInSales(book,user_id);
+
     }
 
     @Override
@@ -66,28 +63,16 @@ public class SaleRepositoryMySQL implements SaleRepository{
     }
 
 
-    @Override
-    public boolean updateBookStockInSales(Book book, Integer currentStock) {
-        String updateStockSql = "UPDATE sales SET stock = stock + 1 WHERE author = ? AND title = ?";
-        try (PreparedStatement statement = connection.prepareStatement(updateStockSql)) {
-            statement.setString(1, book.getAuthor());
-            statement.setString(2, book.getTitle());
-            int rowsUpdated = statement.executeUpdate();
-            return rowsUpdated > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
 
     @Override
-    public boolean insertNewBookInSales(Book book) {
-        String insertBookSql = "INSERT INTO sales (id, author, title, price, stock) VALUES (NULL, ?, ?, ?, ?)";
+    public boolean insertNewBookInSales(Book book, int user_id) {
+        String insertBookSql = "INSERT INTO sales (id, author, title, price, stock,user_id) VALUES (NULL, ?, ?, ?, ?,?)";
         try (PreparedStatement statement = connection.prepareStatement(insertBookSql)) {
             statement.setString(1, book.getAuthor());
             statement.setString(2, book.getTitle());
             statement.setInt(3, book.getPrice());
             statement.setInt(4, 1);
+            statement.setInt(5, Math.toIntExact(user_id));
             statement.executeUpdate();
             return true;
         } catch (SQLException e) {

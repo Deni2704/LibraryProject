@@ -10,6 +10,7 @@ import repository.user.UserRepository;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Collections;
+import java.util.List;
 
 import static database.Constants.Roles.CUSTOMER;
 
@@ -24,13 +25,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public Notification<Boolean> register(String username, String password) {
-        Role customerRole = rightsRolesRepository.findRoleByTitle(CUSTOMER);
+    public Notification<Boolean> register(String username, String password,   String role) {
+        Role userRole = rightsRolesRepository.findRoleByTitle(role);
+        System.out.println(userRole);
+        if (userRole == null) {
+            Notification<Boolean> errorNotification = new Notification<>();
+            errorNotification.addError("Invalid role specified");
+            errorNotification.setResult(Boolean.FALSE);
+            return errorNotification;
+        }
 
         User user = new UserBuilder()
                 .setUsername(username)
                 .setPassword(password)
-                .setRoles(Collections.singletonList(customerRole))
+                .setRoles(Collections.singletonList(userRole))
                 .build();
 
         UserValidator userValidator = new UserValidator(user);
@@ -61,6 +69,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public boolean logout(User user) {
         return false;
+    }
+
+    @Override
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
     }
 
     private String hashPassword(String password) {

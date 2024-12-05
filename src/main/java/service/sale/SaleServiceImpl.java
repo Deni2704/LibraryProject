@@ -16,8 +16,8 @@ public class SaleServiceImpl implements SaleService{
     }
 
     @Override
-    public boolean saveSale(Book book) {
-        return saleRepository.saveSale(book);
+    public boolean saveSale(Book book,int user_id) {
+        return saleRepository.saveSale(book, user_id);
     }
 
     @Override

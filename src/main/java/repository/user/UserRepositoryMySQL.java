@@ -64,6 +64,7 @@ public class UserRepositoryMySQL implements UserRepository {
             if (userResultSet.next())
             {
                 User user = new UserBuilder()
+                        .setId(userResultSet.getLong("id"))
                         .setUsername(userResultSet.getString("username"))
                         .setPassword(userResultSet.getString("password"))
                         .setRoles(rightsRolesRepository.findRolesForUser(userResultSet.getLong("id")))
@@ -144,6 +145,50 @@ public class UserRepositoryMySQL implements UserRepository {
             e.printStackTrace();
             return false;
         }
+    }
+    @Override
+    public Notification<Boolean> deleteUserByUsername(String username) {
+        Notification<Boolean> deleteUserNotification = new Notification<>();
+        try {
+            // Se caută utilizatorul în baza de date pentru a obține ID-ul asociat username-ului
+            String findUserSql = "SELECT id FROM user WHERE username = ?";
+            PreparedStatement findUserStatement = connection.prepareStatement(findUserSql);
+            findUserStatement.setString(1, username);
+            ResultSet userResultSet = findUserStatement.executeQuery();
+
+            if (!userResultSet.next()) {
+                deleteUserNotification.addError("User with the specified username not found.");
+                deleteUserNotification.setResult(false);
+                return deleteUserNotification;
+            }
+
+            // Se obține ID-ul utilizatorului
+            Long userId = userResultSet.getLong("id");
+
+            // Se șterge relația din tabelul intermediar (dacă există)
+            String deleteRolesSql = "DELETE FROM user_role WHERE user_id = ?";
+            PreparedStatement deleteRolesStatement = connection.prepareStatement(deleteRolesSql);
+            deleteRolesStatement.setLong(1, userId);
+            deleteRolesStatement.executeUpdate();
+
+            // Se șterge utilizatorul din tabelul `user`
+            String deleteUserSql = "DELETE FROM user WHERE username = ?";
+            PreparedStatement deleteUserStatement = connection.prepareStatement(deleteUserSql);
+            deleteUserStatement.setString(1, username);
+            int affectedRows = deleteUserStatement.executeUpdate();
+
+            if (affectedRows == 0) {
+                deleteUserNotification.addError("Failed to delete user from database.");
+                deleteUserNotification.setResult(false);
+            } else {
+                deleteUserNotification.setResult(true);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+            deleteUserNotification.addError("Error while deleting user from database.");
+            deleteUserNotification.setResult(false);
+        }
+        return deleteUserNotification;
     }
     private User getUserFromResultSet(ResultSet resultSet) throws SQLException{
         Long id = resultSet.getLong("id");

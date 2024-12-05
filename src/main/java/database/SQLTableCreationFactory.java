@@ -26,10 +26,13 @@ public class SQLTableCreationFactory {
                     " author VARCHAR(500) NOT NULL," +
                     " price INT NOT NULL," +
                     "stock INT NOT NULL,"+
-                    " PRIMARY KEY(id)" +
+                    "timeStamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
+                    " user_id int NULL," +
+                    " PRIMARY KEY(id)," +
+                    "CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE SET NULL"+
                     ") ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;";
             case USER -> "CREATE TABLE IF NOT EXISTS user (" +
-                    "  id INT NOT NULL AUTO_INCREMENT," +
+                    "  id int NOT NULL AUTO_INCREMENT," +
                     "  username VARCHAR(200) NOT NULL," +
                     "  password VARCHAR(64) NOT NULL," +
                     "  PRIMARY KEY (id)," +

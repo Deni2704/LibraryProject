@@ -101,7 +101,9 @@ public class EmployeeController {
                         employeeView.removeBookFromObservableList(saleBookDTO);
                     }
                 }
-                saleService.saveSale(saleBook); // Add sale to the database
+
+
+                saleService.saveSale(saleBook,employeeView.getCurrentUserId()); // Add sale to the database
                 saleBookDTO.setStock(saleBook.getStock()); // Update stock in DTO
                 employeeView.addBookToObservableListSale(saleBookDTO);
                 employeeView.addDisplayAlertMesssage("Sale Successful", "Book Sold", "The book was sold successfully.");
