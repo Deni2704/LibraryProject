@@ -14,10 +14,11 @@ This application is a virtual library that allows the management of books and us
 
 ## 📌 Application Interface
 
-### 🟢 Login Page
+###  Login Page
 Users must authenticate to access the application.
 ![Library Dashboard](1.png)
-### 🔵 Admin Interface
+###  Admin Interface
+![Library Dashboard](2.png)
 The administrator can manage users and the books available in the library.
 
 - ✅ **Add users** (employees and customers)
@@ -25,7 +26,8 @@ The administrator can manage users and the books available in the library.
 - ✅ **View and manage books**
 - ✅ **Generate reports** by month
 
-### 🟠 Employee Interface
+###  Employee Interface
+![Library Dashboard](3.png)
 Employees have access to a simplified interface for book management.
 
 - ✅ **Add books**
